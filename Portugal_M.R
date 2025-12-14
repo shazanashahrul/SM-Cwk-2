@@ -238,7 +238,7 @@ plot(LCres,
      cex = 0.3,
      reslim = c(-3.5, 3.5),
      main = "Lee-Carter - M")
-# fairly random scatterplot
+# fairly random scatterplot, except for cohort
 
 # scatter map of residuals for CBD
 plot(CBDres,
@@ -441,4 +441,5 @@ lines(
 
 legend("topleft", legend=c("LC", "CBD"),
        col=c("red", "blue"), lty=1:2, cex=0.8)
+
 
