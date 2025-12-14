@@ -326,7 +326,7 @@ legend("topright", legend=c("LC", "CBD"),
 
 
 ############################################################
-# PART 5, Q iii) c): Temporary curtate expectation of life #
+# PART 6, Q iii) c): Temporary curtate expectation of life #
 ############################################################
 
 # (formulas used in comments below are in LaTeX format)
