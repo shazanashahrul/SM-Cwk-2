@@ -1,7 +1,7 @@
 #######################################
 # AS3204 Survival Models Coursework 2 #
 #############################################################
-# Mortality forecasting Portugal mortality data with StMoMo #
+# Mortality forecasting FEMALES Portugal mortality data with StMoMo #
 # Group 5 #
 ###########
 
