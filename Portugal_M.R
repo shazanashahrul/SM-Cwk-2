@@ -416,18 +416,18 @@ e55_t35_LC
 e55_t35_CBD
 
 # 4) put into a data frame for tables / plots
-e55_t35_female <- data.frame(
+e55_t35_male <- data.frame(
   year        = as.numeric(names(e55_t35_LC)),
   e55_t35_LC  = as.numeric(e55_t35_LC),
   e55_t35_CBD = as.numeric(e55_t35_CBD)
 )
 
-print(e55_t35_female)
+print(e55_t35_male)
 
 # example plot – LC vs CBD temporary curtate life expectancy at age 55
 
 plot(
-  e55_t35_female$year, e55_t35_female$e55_t35_LC,
+  e55_t35_male$year, e55_t35_male$e55_t35_LC,
   col = "red", type = "l", lwd = 2,
   xlab = "Calendar year t",
   ylab = expression(e[55,t:35]),
@@ -435,7 +435,7 @@ plot(
 )
 
 lines(
-  e55_t35_female$year, e55_t35_female$e55_t35_CBD,
+  e55_t35_male$year, e55_t35_male$e55_t35_CBD,
   col = "blue", lwd = 2, lty = 2
 )
 
