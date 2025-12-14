@@ -333,59 +333,87 @@ legend("topright", legend=c("LC", "CBD"),
 #   e_{55,t:35} = sum_{k=1}^{35} {}_k p_{55,t},
 # where {}_k p_{55,t} is the k-year survival probability for a life aged 55
 # in year t, under a period life table using the forecast forces mu_{x,t}.
-#
+
 # under constant force between integer ages:
 #   p_{x,t} = exp(-mu_{x,t}),
 # and {}_k p_{55,t} = product_{j=0}^{k-1} p_{55+j,t}.
 
-# f orecast years we care about
+# forecast years we want
 years.forecast <- 2023:2042
-age.range      <- 55:89  # 35 ages
+age.range <- 55:89  # 35 ages
 
 # 1) Extract the forecast forces mu_{x,t} for ages 55–89, years 2023–2042
-
-mu_LC  <- LCfor$rates[as.character(age.range), as.character(years.forecast)]
+mu_LC <- LCfor$rates[as.character(age.range), as.character(years.forecast)]
 mu_CBD <- CBDfor$rates[as.character(age.range), as.character(years.forecast)]
 
 # 2) Helper to compute e_{55,t:35} from a mu_{x,t} matrix
 compute_e55_t35 <- function(mu_mat, x_start = 55, term = 35) {
-  # mu_mat: rows = ages ("55",...,"89"), cols = forecast years ("2023",...,"2042")
+  # mu_mat:
+  #   - rows correspond to integer ages (55, 56, ..., 89)
+  #   - columns correspond to calendar years (2023, ..., 2042)
+  #
+  # x_start:
+  #   - starting age (55 in coursework)
+  #
+  # term:
+  #   - number of whole years we consider (35 in coursework)
+  #
+  # OUTPUT:
+  #   - named numeric vector:
+  #       names = calendar years (e.g. "2023", ..., "2042")
+  #       values = e_{55,t:35} for each year t
   
-  # 1-year survival probs p_{x,t}
+  # convert mu to 1-year survival probabilities p_{x,t} = exp(-mu_{x,t})
   p_xt <- exp(-mu_mat)
   
+  # get the calendar years from the column names
   years <- colnames(p_xt)
+  
+  # prepare a vector to store e_{55,t:35} for each year
   e_vec <- numeric(length(years))
   names(e_vec) <- years
   
-  # index of age 55 in the rownames
-  ages_num <- as.integer(rownames(p_xt))
+  # find the row index corresponding to age 55
+  # (we assume rownames are "55", "56", ..., "89")
+  ages_num <- as.integer(rownames(p_xt)) # turn "55" -> 55, etc.
   idx0 <- which(ages_num == x_start)
   
+  # loop over each forecast year t
   for (j in seq_along(years)) {
-    # p_55,t, p_56,t, ..., up to p_(55+term-1),t
+    # extract the column of survival probabilities for that year:
+    # p_55,t, p_56,t, ..., p_89,t
     p_age <- p_xt[, j]
     
-    # cumulative products => {}_k p_{55,t}, k = 1,...,term
-    surv_k <- cumprod(p_age[idx0:(idx0 + term - 1)])
+    # we only need the first 'term' ages starting at 55:
+    # (55, 56, ..., 55 + term - 1)
+    # here term = 35, so this is ages 55,...,89.
+    p_55_to_89 <- p_age[idx0:(idx0 + term - 1)]
     
-    # temporary curtate expectation = sum_k {}_k p_{55,t}
+    # cumulative product:
+    #   surv_k[1] = p_55,t = {}_1 p_{55,t}
+    #   surv_k[2] = p_55,t * p_56,t = {}_2 p_{55,t}
+    #   ...
+    #   surv_k[k] = product_{j=0..k-1} p_{55+j,t} = {}_k p_{55,t}
+    surv_k <- cumprod(p_55_to_89)
+    
+    # temporary curtate expectation:
+    #   e_{55,t:35} = sum_{k=1}^{35} {}_k p_{55,t}
     e_vec[j] <- sum(surv_k)
   }
   
+  # return the vector of e_{55,t:35} across years
   e_vec
 }
 
-# 3) Compute e_{55,t:35} for LC and CBD (females, in this script)
-
+# 3) compute e_{55,t:35} for LC and CBD (females, in this script)
 e55_t35_LC  <- compute_e55_t35(mu_LC)
 e55_t35_CBD <- compute_e55_t35(mu_CBD)
 
-# Have a look
+# have a look
 e55_t35_LC
 e55_t35_CBD
 
-# 4) Optional: put into a data frame for tables / plots
+# 4) put into a data frame for tables / plots
 e55_t35_female <- data.frame(
   year        = as.numeric(names(e55_t35_LC)),
   e55_t35_LC  = as.numeric(e55_t35_LC),
@@ -394,7 +422,7 @@ e55_t35_female <- data.frame(
 
 print(e55_t35_female)
 
-# Example plot – LC vs CBD temporary curtate life expectancy at age 55
+# example plot – LC vs CBD temporary curtate life expectancy at age 55
 
 plot(
   e55_t35_female$year, e55_t35_female$e55_t35_LC,
@@ -411,3 +439,4 @@ lines(
 
 legend("topleft", legend=c("LC", "CBD"),
        col=c("red", "blue"), lty=1:2, cex=0.8)
+
