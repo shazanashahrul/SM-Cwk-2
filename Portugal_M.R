@@ -7,9 +7,9 @@
 
 
 
-#################
-# Preliminaries #
-#################
+#########################################################
+# PART 0: LOAD DATA (needed before parts i, ii, iii...) #
+#########################################################
 
 # set directory: Session -> Set Working Directory -> To Source File Location
 
@@ -37,9 +37,9 @@ PORTUGALStMoMom$label # portugal
 
 
 
-#######################################
-# Define a stochastic mortality model #
-#######################################
+###############################################
+# PART 1: Define a stochastic mortality model #
+###############################################
 
 # Lee-Carter (LC)
 
@@ -72,9 +72,9 @@ print(CBD)
 
 
 
-####################################
-# Fit a stochastic mortality model #
-####################################
+########################################################
+# PART 2, Q i) & ii): Fit a stochastic mortality model #
+########################################################
 
 # set the ages and years to use in fitting (we want to skip periods of time like world war and plagues etc)
 # ages 55 to 89 (35 ages), years 1963 to 2022 (60 years)
@@ -142,9 +142,9 @@ legend("topright", legend=c("LC", "CBD"),
 
 
 
-###############################
-# Analyse the estimated model #
-###############################
+#######################################
+# PART 3: Analyse the estimated model #
+#######################################
 
 # convergence:
 LCfit$conv 
@@ -187,9 +187,9 @@ plot(CBDfit, parametricbx = FALSE)
 
 
 
-###################################
-# Analyse residuals of the models #
-###################################
+######################################################
+# PART 4, Q iii) a): Analyse residuals of the models #
+######################################################
 
 # to analyse goodness of fit of model. How good is the model, does it represent data? 
 # is there any effect that is not captured by the model chosen?
@@ -262,9 +262,9 @@ BIC(CBDfit)
 
 
 
-###############
-# Forecasting #
-###############
+##################################
+# PART 5, Q iii) b): Forecasting #
+##################################
 
 # Forecast the models 20 years ahead: h = 20
 # Firstly, forecasting of kt
@@ -325,9 +325,9 @@ legend("topright", legend=c("LC", "CBD"),
 
 
 
-#########################################
-# Temporary curtate expectation of life #
-#########################################
+############################################################
+# PART 6, Q iii) c): Temporary curtate expectation of life #
+############################################################
 
 # (formulas used in comments below are in LaTeX format)
 
@@ -441,3 +441,4 @@ lines(
 
 legend("topleft", legend=c("LC", "CBD"),
        col=c("red", "blue"), lty=1:2, cex=0.8)
+
