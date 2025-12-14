@@ -99,17 +99,6 @@ mxt <- PORTUGALStMoMof$Dxt / PORTUGALStMoMof$Ext
 # LC fitted rates
 mxt.hat.lc <- fitted(LCfit, type = "rates")
 
-# plot actual rates
-plot(years.fit,
-     mxt["55", as.character(years.fit)],
-     xlab = "year",
-     ylab = "central death rate",
-     main = "Fitted vs. observed rates at age 55 - Females"
-)
-
-# plot LC fitted rates
-lines(years.fit, mxt.hat.lc["55", ], col = "red")
-
 # fit Cairns-Blake-Dowd with ML
 
 # CBDfit <- fit(object = CBD,
@@ -128,8 +117,21 @@ CBDfit <- fit(object = CBD,
               years.fit = years.fit
 )
 
+
 # CBD fitted rates
 mxt.hat.cbd <- fitted(CBDfit, type = "rates")
+
+# plot actual rates
+plot(years.fit,
+     mxt["55", as.character(years.fit)],
+     ylim = range(mxt["55", as.character(years.fit)], mxt.hat.lc["55", ], mxt.hat.cbd["55", ]), # makes sure everything is in frame
+     xlab = "year",
+     ylab = "central death rate",
+     main = "Fitted vs. observed rates at age 55 - Females"
+)
+
+# plot LC fitted rates
+lines(years.fit, mxt.hat.lc["55", ], col = "red")
 
 # overlay CBD fitted rates
 lines(years.fit, mxt.hat.cbd["55", ], col = "blue")
@@ -439,4 +441,3 @@ lines(
 
 legend("topleft", legend=c("LC", "CBD"),
        col=c("red", "blue"), lty=1:2, cex=0.8)
-
